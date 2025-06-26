@@ -116,15 +116,82 @@ docker run -p 5000:5000 banco-etheria-poc
 
 ## 📁 Estructura del repositorio
 
-```
-.
-├── app.py                # Aplicación principal Flask
-├── requirements.txt      # Dependencias
-├── Dockerfile            # Imagen base para despliegue
-└── README.md             # Esta documentación
+```tree
+Raíz del repositorio:
+├── 🐍app.py                # Aplicación principal Flask
+├── 🐋Dockerfile            # Imagen base para despliegue
+├── 📝README.md             # Documentación del proyecto
+├── 📦 requirements.txt     # Dependencias del proyecto
+└── 📁Terraform/            # Infraestructura como código con Terraform
+    ├── build_and_push.sh # Script para construir y subir la imagen a ECR
+    ├── main.tf           # Archivo principal de Terraform
+    └── outputs.tf        # Salidas de Terraform
 ```
 
-## 🗺️ Arquitectura de la implementación del POC (Mermaid Diagram)
+
+## Ejecución desde instancia EC2 (Cloud9 o EC2 con herramientas preinstaladas)
+
+### 1. Clona el repositorio del proyecto
+
+```bash
+git clone [url de este repositorio]
+cd [nombre-del-repositorio]/Terraform/
+```
+
+_Reemplaza `[url de este repositorio]` por la URL real del repositorio GitHub (por ejemplo: `https://github.com/usuario/proyecto.git`)._
+
+
+### 2. Inicializa Terraform
+
+```bash
+terraform init
+```
+
+---
+
+### 3. (Opcional) Verifica el plan de ejecución
+
+```bash
+terraform plan
+```
+
+---
+
+### 4. Aplica la infraestructura
+
+```bash
+terraform apply
+```
+---
+
+### 5. Accede al microservicio desplegado
+
+Una vez finalizado el `terraform apply`, verás salidas como:
+
+```bash
+Outputs:
+alb_dns_name = "[url del DNS del ALB]"
+ecr_repository_url = "[url del repositorio ECR]"
+```
+
+Tu microservicio estará disponible en:
+
+```bash
+http://[url del DNS del ALB]:80/saldo/usuario1
+```
+
+> 📌 Este endpoint corresponde al path `/` que expone el contenedor Flask en el puerto 5000, redirigido por el ALB a través de HTTP (puerto 80).
+
+---
+
+### 7. Para destruir todos los recursos creados
+
+```bash
+terraform destroy
+```
+Esto eliminará los recursos creados por Terraform, incluyendo el repositorio ECR, la tarea ECS y el Application Load Balancer.
+
+## Arquitectura de la implementación del POC (Mermaid Diagram)
 ```mermaid
 ---
 config:
@@ -181,7 +248,7 @@ flowchart TD
 
 ---
 
-## 🗺️ Arquitectura completa del caso (Mermaid Diagram)
+## Arquitectura completa del caso (Mermaid Diagram)
 
 ```mermaid
 ---
