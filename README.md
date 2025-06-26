@@ -157,7 +157,8 @@ flowchart TD
     H["Github repository"]
 
     %% Conexiones
-    A --> B --> C --> D
+    A -- "HTTPS:5000" --> B
+    B --> C --> D
     D --> D1 & D2 & D3
     J --> C
     H -- "git clone" --> J
@@ -175,7 +176,6 @@ flowchart TD
     style J fill:#e6f7ff,stroke:#13c2c2       %% Build&Push
     style G fill:#fff1b8,stroke:#faad14       %% Terraform
     style H fill:#f0f0f0,stroke:#8c8c8c       %% GitHub repo
-
 ```
 
 
