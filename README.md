@@ -124,9 +124,64 @@ docker run -p 5000:5000 banco-etheria-poc
 └── README.md             # Esta documentación
 ```
 
+## 🗺️ Arquitectura de la implementación del POC (Mermaid Diagram)
+```mermaid
+---
+config:
+  layout: elk
+---
+flowchart TD
+    %% Subredes y VPC
+    subgraph subGraph0["Subred 1"]
+        D1["Tarea Fargate:<br>Microservicio Saldos"]
+    end
+    subgraph subGraph1["Subred 2"]
+        D2["Tarea Fargate:<br>Microservicio Pagos"]
+    end
+    subgraph subGraph2["Subred 3"]
+        D3["Tarea Fargate:<br>Microservicio Notificaciones"]
+    end
+    subgraph subGraph3["VPC Privada"]
+        subGraph0
+        subGraph1
+        subGraph2
+    end
+
+    %% Infraestructura y flujo
+    A["Clientes web<br>API"]
+    B["ALB<br>DNS URL"]
+    C["AWS WAF + ALB"]
+    D["ECS Cluster"]
+    J["Build & Push a ECR"]
+    G["Terraform"]
+    H["Github repository"]
+
+    %% Conexiones
+    A --> B --> C --> D
+    D --> D1 & D2 & D3
+    J --> C
+    H -- "git clone" --> J
+    G --> H
+    G --> C
+
+    %% Estilos por función
+    style A fill:#e6f7ff,stroke:#3399ff       %% Entrada
+    style B fill:#d9f7be,stroke:#52c41a       %% Routing
+    style C fill:#d9f7be,stroke:#52c41a       %% WAF + ALB
+    style D fill:#ffe7ba,stroke:#fa8c16       %% ECS Cluster
+    style D1 fill:#f9f0ff,stroke:#9254de      %% Fargate
+    style D2 fill:#f9f0ff,stroke:#9254de
+    style D3 fill:#f9f0ff,stroke:#9254de
+    style J fill:#e6f7ff,stroke:#13c2c2       %% Build&Push
+    style G fill:#fff1b8,stroke:#faad14       %% Terraform
+    style H fill:#f0f0f0,stroke:#8c8c8c       %% GitHub repo
+
+```
+
+
 ---
 
-## 🗺️ Arquitectura (Mermaid Diagram)
+## 🗺️ Arquitectura completa del caso (Mermaid Diagram)
 
 ```mermaid
 ---
